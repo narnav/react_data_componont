@@ -2,6 +2,8 @@ import { useState } from 'react';
 import './App.css';
 import MyCart from './MyCart';
 import prods from './MyDB';
+import axios from 'axios';
+import MyLogin from './MyLogin';
 
 function App() {
     const [myProds, setmyProds] = useState(prods)
@@ -9,7 +11,7 @@ function App() {
     const [desc, setdesc] = useState("")
     const [cart, setcart] = useState([])
     const SERVER_URL = 'http://localhost:3004/prods'
-    const DJANGO ='http://127.0.0.1:8000/'
+    const DJANGO ='http://127.0.0.1:8000/notes/'
 
     const addProduct = () => {
         setmyProds([...myProds, {
@@ -25,7 +27,7 @@ function App() {
     const delFromCart = (i) => {
         console.log(cart[i].desc)
         // setcart(cart.splice(i,1))
-        setcart(cart.filter(x => x.desc != cart[i].desc))
+        setcart(cart.filter(x => x.desc !== cart[i].desc))
     }
 
     const add2Cart = (i) => {
@@ -48,11 +50,25 @@ function App() {
                 console.error('Error:', error);
             });
     }
-
+const test=async()=>{
+    axios.get(DJANGO)
+    .then(function (response) {
+      // handle success
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+}
 
 
     return (
         <div className="App">
+            <button onClick={()=>test()}>Test</button>
             <button onClick={() => addData2Sever()}>Add daata 2 server</button>
             <button onClick={() => loadCart()}>load</button>
             <MyCart del={delFromCart} cart={cart}></MyCart>
@@ -65,6 +81,8 @@ function App() {
                 {prod.desc}{" "}
                 <button onClick={() => add2Cart(ind)}>Add to Cart</button>
             </div>)}
+            <hr></hr>
+            <MyLogin></MyLogin>
         </div>
     );
 }
